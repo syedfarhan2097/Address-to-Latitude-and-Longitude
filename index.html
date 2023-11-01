@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geocoding Example</title>
+</head>
+<body>
+    <h1>Address to Latitude and Longitude</h1>
+    <input type="text" id="addressInput" placeholder="Enter an address">
+    <button onclick="geocodeAddress()">Geocode</button>
+    <div id="geocodeResult"></div>
+
+    <script>
+      function geocodeAddress() {
+        const apiKey = 'a703a5c6dd7f42c68dcd31d40d0feb04';
+        const addressInput = document.getElementById('addressInput').value;
+
+        const requestOptions = {
+          method: 'GET',
+        };
+
+        fetch(`https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(addressInput)}&apiKey=${apiKey}`, requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            if (result && result.features && result.features.length > 0) {
+              const location = result.features[0].properties;
+              const latitude = location.lat;
+              const longitude = location.lon;
+              const geocodeResult = document.getElementById('geocodeResult');
+              geocodeResult.innerHTML = `Latitude: ${latitude}, Longitude: ${longitude}`;
+            } else {
+              const geocodeResult = document.getElementById('geocodeResult');
+              geocodeResult.innerHTML = 'Address not found';
+            }
+          })
+          .catch(error => console.log('error', error));
+      }
+    </script>
+</body>
+</html>
